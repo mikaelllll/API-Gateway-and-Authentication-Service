@@ -3,6 +3,13 @@ set -euo pipefail
 
 docker compose up -d
 
+show_failure() {
+  printf ' failed.\n\n'
+  docker compose ps
+  docker compose logs --tail=100 app
+  exit 1
+}
+
 printf '\nWaiting for Sentinel Gateway'
 for attempt in $(seq 1 60); do
   if curl --fail --silent http://localhost:8000/api/health >/dev/null 2>&1; then
@@ -10,11 +17,12 @@ for attempt in $(seq 1 60); do
     break
   fi
 
+  if docker compose ps --status exited --services | grep --quiet '^app$'; then
+    show_failure
+  fi
+
   if [ "$attempt" -eq 60 ]; then
-    printf ' failed.\n\n'
-    docker compose ps
-    docker compose logs --tail=100 app
-    exit 1
+    show_failure
   fi
 
   printf '.'
