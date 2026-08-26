@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import Body, Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -73,6 +73,22 @@ async def refresh(body: RefreshRequest, db: AsyncSession = Depends(get_db)):
 async def revoke(body: RevokeRequest, db: AsyncSession = Depends(get_db)):
     token=(await db.execute(select(RefreshToken).where(RefreshToken.token_hash==digest(body.refresh_token)))).scalar_one_or_none()
     if token and not token.revoked_at: token.revoked_at=datetime.now(timezone.utc); await db.commit()
+
+@app.post("/api/lab/password-hash", tags=["Security Lab"])
+async def password_hash_lab(password: str = Body(embed=True, min_length=10, max_length=128)):
+    """Demonstrate one-way Argon2 hashing without exposing stored user credentials."""
+    password_hash = hash_password(password)
+    return {
+        "algorithm": "Argon2",
+        "hash": password_hash,
+        "plaintext_stored": False,
+        "verification_passed": verify_password(password, password_hash),
+    }
+
+@app.get("/api/lab/rate-limit", tags=["Security Lab"])
+async def rate_limit_lab():
+    """A safe target used by the frontend to demonstrate the gateway's 429 response."""
+    return {"allowed": True, "limit": 60, "window_seconds": 60}
 
 @app.get("/api/me", response_model=UserView)
 async def me(user: User = Depends(current_user)): return user
