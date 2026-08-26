@@ -13,7 +13,8 @@
     }
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
-  "postStartCommand": "bash .devcontainer/start.sh",
+  "postStartCommand": "docker compose up -d",
+  "postAttachCommand": "bash .devcontainer/start.sh",
   "customizations": {
     "vscode": {
       "extensions": [
