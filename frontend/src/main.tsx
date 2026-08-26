@@ -25,13 +25,13 @@ function App(){
    <section className="hero"><div><div className="eyebrow"><LockKeyhole size={14}/> ZERO-TRUST IDENTITY LAYER</div><h1>Every request.<br/><em>Verified.</em></h1><p>A production-style API gateway demonstrating modern authentication, authorization and security observability—built as an interactive engineering portfolio.</p><div className="heroActions"><a className="primary" href="#lab"><Terminal/>Launch security lab</a><a className="secondary" href="/api/docs"><BookOpen/>Explore OpenAPI</a></div></div><div className="terminal"><div className="termTop"><span/><span/><span/><b>gateway.request.log</b></div><pre><code><s>$</s> curl /api/me \
   -H <q>"Authorization: Bearer eyJ..."</q>
 
-<m>HTTP/2 200 OK</m>
-<d>x-gateway:</d> Sentinel
-<d>x-content-type-options:</d> nosniff
+<strong>HTTP/2 200 OK</strong>
+<span className="dim">x-gateway:</span> Sentinel
+<span className="dim">x-content-type-options:</span> nosniff
 
 {'{'}
   <q>"identity"</q>: <q>"verified"</q>,
-  <q>"policy"</q>: <m>"allow"</m>,
+  <q>"policy"</q>: <strong>"allow"</strong>,
   <q>"latency_ms"</q>: 18
 {'}'}</code></pre><div className="scan"><span/></div></div></section>
    <section className="strip"><div><Activity/>ASYNC PYTHON</div><div>FASTAPI</div><div>POSTGRESQL</div><div>REDIS</div><div>REACT + TYPESCRIPT</div><div>DOCKER</div></section>
@@ -40,4 +40,3 @@ function App(){
   </main><footer><div className="brand"><ShieldCheck/><span>SENTINEL</span></div><p>Built to demonstrate production-minded backend engineering.</p><a href="/api/docs">OpenAPI specification →</a></footer>
  </>}
 createRoot(document.getElementById('root')!).render(<App/>);
-
