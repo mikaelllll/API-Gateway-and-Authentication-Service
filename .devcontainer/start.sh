@@ -37,14 +37,15 @@ fi
 
 printf '\n============================================================\n'
 printf '  Sentinel Gateway is running\n'
-printf '  Open the frontend: %s\n' "$APP_URL"
-printf '  API documentation: %s/api/docs\n' "$APP_URL"
+printf '\n'
+printf '  OPEN THE FRONTEND:\n'
+printf '  %s\n' "$APP_URL"
+printf '\n'
+printf '  API documentation:\n'
+printf '  %s/api/docs\n' "$APP_URL"
 printf '============================================================\n\n'
 
-if [ -n "${BROWSER:-}" ] && [ -x "${BROWSER}" ]; then
-  "${BROWSER}" "$APP_URL" >/dev/null 2>&1 || true
-fi
-
-if command -v code >/dev/null 2>&1; then
-  code --open-url "$APP_URL" >/dev/null 2>&1 || true
-fi
+# Codespaces opens the forwarded port through devcontainer.json:
+# portsAttributes.8000.onAutoForward = "openBrowser".
+# Do not invoke VS Code's URL/Markdown commands here; doing so can open the
+# editor itself or create a repeated open loop instead of opening the app.
