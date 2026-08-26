@@ -43,6 +43,8 @@ printf '============================================================\n\n'
 
 if [ -n "${BROWSER:-}" ] && [ -x "${BROWSER}" ]; then
   "${BROWSER}" "$APP_URL" >/dev/null 2>&1 || true
-elif command -v code >/dev/null 2>&1; then
+fi
+
+if command -v code >/dev/null 2>&1; then
   code --open-url "$APP_URL" >/dev/null 2>&1 || true
 fi
