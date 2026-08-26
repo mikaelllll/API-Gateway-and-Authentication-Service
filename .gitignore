@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+.venv/
+node_modules/
+frontend/dist/
+*.db
+.DS_Store
+
