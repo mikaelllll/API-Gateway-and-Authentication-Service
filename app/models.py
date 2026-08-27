@@ -2,7 +2,7 @@ import enum
 from datetime import datetime, timezone
 from uuid import uuid4
 from sqlalchemy import Boolean, DateTime, Enum, ForeignKey, String, Text
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from app.database import Base
 
 def now(): return datetime.now(timezone.utc)
