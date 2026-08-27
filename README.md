@@ -14,7 +14,9 @@ Codespaces does not open the application automatically. If startup completed bef
 - Open the **Ports** tab, find port **8000** labelled **Sentinel Gateway**, then select its globe/open-browser icon.
 - Run `bash .devcontainer/start.sh`. This checks the application and prints the frontend URL again without rebuilding it.
 
-No local configuration is required. For local use, run `docker compose up --build` and open [http://localhost:8000](http://localhost:8000).
+No local configuration is required in Codespaces.
+
+For local use, install Docker with Docker Compose, run `docker compose up --build`, and open [http://localhost:8000](http://localhost:8000). Copy `.env.example` to `.env` only when you want to override the documented development defaults. Never use those defaults for a public deployment.
 
 ## What it demonstrates
 
@@ -39,6 +41,16 @@ No local configuration is required. For local use, run `docker compose up --buil
 | [Development](docs/DEVELOPMENT.md) | Local setup, testing, CI, project structure |
 
 Interactive API documentation is available at `/api/docs` while the project is running.
+
+## Verify the project
+
+GitHub Actions checks Python imports, backend tests and coverage, TypeScript, the production frontend build, and the final Docker image on every push and pull request. Run the same core checks locally with:
+
+```bash
+ruff check app tests --select F
+pytest --cov=app
+cd frontend && npm run lint && npm run build
+```
 
 ## Important scope note
 
