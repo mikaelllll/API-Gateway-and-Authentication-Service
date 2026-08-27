@@ -1,5 +1,5 @@
 from functools import lru_cache
-from pydantic import field_validator
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     database_url: str = "sqlite+aiosqlite:///./gateway.db"
     redis_url: str = "redis://localhost:6379/0"
-    jwt_secret: str = "development-secret-change-before-production"
+    jwt_secret: str = Field(default="development-secret-change-before-production", min_length=32)
     access_token_minutes: int = 15
     refresh_token_days: int = 7
     cors_origins: list[str] | str = ["http://localhost:5173", "http://localhost:8000"]
