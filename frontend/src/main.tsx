@@ -4,7 +4,7 @@ import{Activity,BookOpen,CheckCircle2,Clock,Copy,Fingerprint,Gauge,KeyRound,Lock
 import'./styles.css';
 
 type Result={ok:boolean;status:number;body:unknown;duration:number};
-const api=async(path:string,init:RequestInit={}):Promise<Result>=>{const start=performance.now();try{const response=await fetch(`/api${path}`,{...init,headers:{'Content-Type':'application/json',...(init.headers||{})}});const text=await response.text();return{ok:response.ok,status:response.status,body:text?JSON.parse(text):null,duration:Math.round(performance.now()-start)}}catch(error){return{ok:false,status:0,body:{error:String(error)},duration:Math.round(performance.now()-start)}}};
+const api=async(path:string,init:RequestInit={}):Promise<Result>=>{const start=performance.now();try{const response=await fetch(`/api${path}`,{...init,headers:{'Content-Type':'application/json',...(init.headers||{})}});const raw=await response.text();let body:unknown=null;if(raw){try{body=JSON.parse(raw)}catch{body={detail:raw}}}return{ok:response.ok,status:response.status,body,duration:Math.round(performance.now()-start)}}catch(error){return{ok:false,status:0,body:{error:String(error)},duration:Math.round(performance.now()-start)}}};
 
 const features=[['JWT','Short-lived signed access tokens'],['Refresh rotation','One-time refresh tokens'],['OAuth2 ready','Bearer flow and OpenAPI'],['RBAC','User, auditor and admin policy'],['API keys','Hashed machine credentials'],['Rate limits','Redis distributed counters'],['Validation','Strict Pydantic schemas'],['Argon2','Modern password hashing'],['Revocation','Server-side token invalidation'],['Audit logs','Security event trail']];
 
