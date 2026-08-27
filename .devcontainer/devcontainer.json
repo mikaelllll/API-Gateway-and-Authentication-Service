@@ -9,7 +9,7 @@
   "portsAttributes": {
     "8000": {
       "label": "Sentinel Gateway",
-      "onAutoForward": "openBrowser"
+      "onAutoForward": "silent"
     }
   },
   "postCreateCommand": "bash .devcontainer/setup.sh",
