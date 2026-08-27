@@ -1,6 +1,5 @@
 import json
 from datetime import datetime, timedelta, timezone
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.config import get_settings
 from app.models import AuditLog, RefreshToken, User
