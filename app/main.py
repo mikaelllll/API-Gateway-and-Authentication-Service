@@ -26,20 +26,29 @@ app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins, al
 
 @app.middleware("http")
 async def gateway_middleware(request: Request, call_next):
-    if request.url.path.startswith("/api/"):
+    if request.url.path.startswith("/api/") and request.url.path != "/api/health":
         try:
             await enforce_rate_limit(request)
         except HTTPException as exc:
             return JSONResponse(
                 status_code=exc.status_code,
                 content={"detail": exc.detail},
-                headers={"Retry-After": "60", "X-Gateway": "Sentinel"},
+                headers={
+                    "Retry-After": "60",
+                    "Cache-Control": "no-store",
+                    "X-Content-Type-Options": "nosniff",
+                    "X-Frame-Options": "DENY",
+                    "Referrer-Policy": "no-referrer",
+                    "X-Gateway": "Sentinel",
+                },
             )
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "no-referrer"
     response.headers["X-Gateway"] = "Sentinel"
+    if request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
     return response
 
 @app.get("/api/health")
@@ -72,7 +81,9 @@ async def oauth2_token(request: Request, form: OAuth2PasswordRequestForm = Depen
 
 @app.post("/api/auth/refresh", response_model=TokenPair)
 async def refresh(body: RefreshRequest, db: AsyncSession = Depends(get_db)):
-    token = (await db.execute(select(RefreshToken).where(RefreshToken.token_hash == digest(body.refresh_token)))).scalar_one_or_none()
+    token = (await db.execute(select(RefreshToken).where(
+        RefreshToken.token_hash == digest(body.refresh_token)
+    ).with_for_update())).scalar_one_or_none()
     now=datetime.now(timezone.utc)
     if not token or token.revoked_at or token.expires_at.replace(tzinfo=timezone.utc) <= now: raise HTTPException(401,"Invalid refresh token")
     token.revoked_at=now; user=await db.get(User,token.user_id); await db.commit(); return await issue_tokens(db,user)
