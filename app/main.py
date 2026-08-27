@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from fastapi import Body, Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import desc, select
@@ -26,7 +26,15 @@ app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origins, al
 
 @app.middleware("http")
 async def gateway_middleware(request: Request, call_next):
-    if request.url.path.startswith("/api/"): await enforce_rate_limit(request)
+    if request.url.path.startswith("/api/"):
+        try:
+            await enforce_rate_limit(request)
+        except HTTPException as exc:
+            return JSONResponse(
+                status_code=exc.status_code,
+                content={"detail": exc.detail},
+                headers={"Retry-After": "60", "X-Gateway": "Sentinel"},
+            )
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
