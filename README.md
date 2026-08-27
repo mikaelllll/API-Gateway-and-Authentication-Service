@@ -5,8 +5,14 @@ A production-style identity gateway built to demonstrate backend engineering, ap
 ## Run in GitHub Codespaces
 
 1. Select **Code → Codespaces → Create codespace on main**.
-2. Wait for the container build to finish.
-3. Codespaces automatically starts PostgreSQL, Redis, the backend, and the frontend, then opens the **Sentinel Gateway** page.
+2. If Codespaces asks, select **I trust the authors**.
+3. Wait while PostgreSQL, Redis, the backend, and the frontend are built and started.
+4. At the end of startup, the terminal prints the frontend URL under **OPEN THE FRONTEND**. Hold Ctrl (or Cmd on macOS) and select the link.
+
+Codespaces does not open the application automatically. If startup completed before the visible terminal was ready and you cannot see the link, use either method below:
+
+- Open the **Ports** tab, find port **8000** labelled **Sentinel Gateway**, then select its globe/open-browser icon.
+- Run `bash .devcontainer/start.sh`. This checks the application and prints the frontend URL again without rebuilding it.
 
 No local configuration is required. For local use, run `docker compose up --build` and open [http://localhost:8000](http://localhost:8000).
 
