@@ -45,7 +45,5 @@ printf '  API documentation:\n'
 printf '  %s/api/docs\n' "$APP_URL"
 printf '============================================================\n\n'
 
-# Codespaces opens the forwarded port through devcontainer.json:
-# portsAttributes.8000.onAutoForward = "openBrowser".
-# Do not invoke VS Code's URL/Markdown commands here; doing so can open the
-# editor itself or create a repeated open loop instead of opening the app.
+# Codespaces forwards port 8000 silently. The user opens the printed URL or
+# uses the Ports tab. Do not invoke VS Code URL/Markdown commands here.
