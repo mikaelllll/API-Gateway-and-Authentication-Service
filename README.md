@@ -31,6 +31,21 @@ For local use, install Docker with Docker Compose, run `docker compose up --buil
 - Persistent security audit logs
 - Async FastAPI, SQLAlchemy, PostgreSQL, React, TypeScript, Docker, CI
 
+## Key engineering decisions
+
+- **Use short-lived access tokens and rotating refresh tokens:** access checks remain stateless while refresh-token records support reuse detection and explicit revocation.
+- **Store only credential hashes:** passwords use Argon2, and API keys and refresh tokens are compared through protected representations rather than retained as plaintext.
+- **Centralize authorization dependencies:** authentication, role checks, and service-key validation are enforced at the FastAPI boundary instead of being repeated inside handlers.
+- **Share rate-limit state through Redis:** limits remain consistent across multiple API instances rather than resetting independently in process memory.
+- **Persist security events:** audit records make authentication and administrative actions inspectable without exposing secret values.
+
+## Trade-offs
+
+- JWT access tokens remain valid until their short expiration unless every request performs a server-side revocation lookup.
+- Rotating refresh tokens improve session security but add database state, cleanup, and race-condition handling.
+- Redis-backed rate limiting works across replicas but introduces an infrastructure dependency for protected requests.
+- The built-in identity flow makes the controls demonstrable; a production organization may delegate federation and account recovery to a dedicated identity provider.
+
 ## Documentation
 
 | Guide | Contents |
