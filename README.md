@@ -2,6 +2,10 @@
 
 A production-style identity gateway built to demonstrate backend engineering, application security, distributed infrastructure, and a polished developer experience. The live security lab lets visitors exercise the real authentication lifecycle and inspect every API response.
 
+## Application preview
+
+[![Sentinel API Gateway security dashboard](docs/images/application-preview.webp)](docs/images/application-preview.webp)
+
 ## Run in GitHub Codespaces
 
 1. Select **Code → Codespaces → Create codespace on main**.
